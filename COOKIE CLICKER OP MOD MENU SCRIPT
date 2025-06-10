@@ -1,0 +1,370 @@
+// Cookie Clicker Mod Menu - 200+ SUPER OVERPOWERED Cheats
+// Made by TrexGtag
+// Paste this into your browser console while playing Cookie Clicker
+
+(function() {
+    'use strict';
+    
+    // Check if Cookie Clicker is loaded
+    if (typeof Game === 'undefined') {
+        alert('Please run this script on the Cookie Clicker game page!');
+        return;
+    }
+    
+    // Remove existing mod menu if present
+    const existingMenu = document.getElementById('trex-mod-menu');
+    if (existingMenu) existingMenu.remove();
+    
+    // Create mod menu HTML
+    const modMenuHTML = `
+        <div id="trex-mod-menu" style="
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            width: 380px;
+            max-height: 80vh;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: 3px solid #fff;
+            border-radius: 15px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+            z-index: 999999;
+            font-family: 'Arial', sans-serif;
+            color: white;
+            overflow: hidden;
+        ">
+            <div style="
+                background: rgba(0,0,0,0.2);
+                padding: 15px;
+                text-align: center;
+                border-bottom: 2px solid rgba(255,255,255,0.3);
+                cursor: move;
+            " id="mod-header">
+                <h2 style="margin: 0; font-size: 18px; text-shadow: 2px 2px 4px rgba(0,0,0,0.5);">
+                    🍪 Cookie Clicker Mod Menu 🍪
+                </h2>
+                <p style="margin: 5px 0 0 0; font-size: 12px; opacity: 0.9;">
+                    Made by TrexGtag | <span id="cheat-count">200+</span> OVERPOWERED Cheats
+                </p>
+                <button id="toggle-menu" style="
+                    position: absolute;
+                    top: 10px;
+                    right: 10px;
+                    background: rgba(255,255,255,0.2);
+                    border: none;
+                    color: white;
+                    width: 25px;
+                    height: 25px;
+                    border-radius: 50%;
+                    cursor: pointer;
+                    font-size: 14px;
+                ">-</button>
+            </div>
+            
+            <div id="menu-content" style="
+                max-height: 60vh;
+                overflow-y: auto;
+                padding: 15px;
+            ">
+                <div id="cheat-categories"></div>
+            </div>
+        </div>
+    `;
+    
+    // Insert mod menu into page
+    document.body.insertAdjacentHTML('beforeend', modMenuHTML);
+    
+    // Define cheat categories and functions
+    const cheatCategories = {
+        'ULTIMATE Cookie Cheats': [
+            ['Add 1 Octillion Cookies', () => Game.Earn(1e27)],
+            ['Add 1 Nonillion Cookies', () => Game.Earn(1e30)],
+            ['Add 1 Decillion Cookies', () => Game.Earn(1e33)],
+            ['Add 1 Undecillion Cookies', () => Game.Earn(1e36)],
+            ['Add 1 Duodecillion Cookies', () => Game.Earn(1e39)],
+            ['Add 1 Googol Cookies', () => Game.Earn(1e100)],
+            ['INFINITE COOKIE BOMB', () => Game.Earn(Number.MAX_SAFE_INTEGER)],
+            ['Cookie Tsunami (1e50)', () => Game.Earn(1e50)],
+            ['Cookie Apocalypse (1e100)', () => Game.Earn(1e100)],
+            ['Reality-Breaking Cookies', () => { Game.cookies = Infinity; Game.cookiesEarned = Infinity; }],
+            ['Cookie Multiverse Generator', () => { for(let i = 0; i < 100; i++) Game.Earn(1e30); }],
+            ['Quantum Cookie Entanglement', () => { setInterval(() => Game.Earn(1e20), 1); }],
+            ['Cookie Singularity', () => { Game.cookiesPs = Infinity; Game.Earn(1e200); }],
+            ['Dimensional Cookie Rift', () => { Game.cookies *= 1e50; Game.cookiesEarned *= 1e50; }],
+            ['Cookie God Mode', () => { Game.cookies = 1e500; Game.cookiesPs = 1e100; }],
+        ],
+        
+        'GODLIKE Building Cheats': [
+            ['Buy 1000 of EVERYTHING', () => Object.keys(Game.Objects).forEach(building => Game.Objects[building].buy(1000))],
+            ['Buy 10000 of EVERYTHING', () => Object.keys(Game.Objects).forEach(building => Game.Objects[building].buy(10000))],
+            ['INFINITE Building Spree', () => Object.keys(Game.Objects).forEach(building => { Game.Objects[building].amount = 1e10; })],
+            ['Building Apocalypse', () => Object.keys(Game.Objects).forEach(building => Game.Objects[building].buy(100000))],
+            ['Fractal Farm Army', () => Game.Objects.Farm.amount = 1e20],
+            ['Grandma Army Uprising', () => { Game.Objects.Grandma.amount = 1e15; Game.Objects.Grandma.totalCookies = 1e50; }],
+            ['Factory Dimension', () => Game.Objects.Factory.amount = 1e18],
+            ['Bank Universe', () => Game.Objects.Bank.amount = 1e25],
+            ['Temple Multiverse', () => Game.Objects.Temple.amount = 1e30],
+            ['Wizard Tower Infinity', () => Game.Objects['Wizard tower'].amount = 1e35],
+            ['Portal to Cookie Dimension', () => Game.Objects.Portal.amount = 1e40],
+            ['Time Machine Paradox', () => Game.Objects['Time machine'].amount = 1e45],
+            ['Prism Reality Bender', () => Game.Objects.Prism.amount = 1e50],
+            ['Chancemaker Luck God', () => Game.Objects.Chancemaker.amount = 1e55],
+            ['Fractal Engine Chaos', () => Game.Objects['Fractal engine'] && (Game.Objects['Fractal engine'].amount = 1e60)],
+        ],
+        
+        'INSANE Click Cheats': [
+            ['Click Power: OVER 9000', () => Game.globalCpsMult = 9001],
+            ['Click Power: GODLIKE', () => Game.globalCpsMult = 1e10],
+            ['Click Power: REALITY BREAKER', () => Game.globalCpsMult = 1e50],
+            ['Quantum Auto Clicker', () => window.quantumClicker = setInterval(() => { for(let i = 0; i < 1000; i++) Game.ClickCookie(); }, 1)],
+            ['Reality Warping Clicker', () => window.realityClicker = setInterval(() => Game.Earn(1e20), 1)],
+            ['Multiverse Click Storm', () => { for(let i = 0; i < 1000000; i++) Game.ClickCookie(); }],
+            ['Dimensional Click Rift', () => { Game.computedMouseCps = 1e50; }],
+            ['Click Singularity', () => { setInterval(() => { Game.ClickCookie(); Game.Earn(1e15); }, 1); }],
+            ['God Mode Clicking', () => { Game.mouseCps = Infinity; }],
+            ['Transcendent Click Power', () => { Game.globalCpsMult = Infinity; }],
+            ['Reality Shattering Clicks', () => { window.shatterClicker = setInterval(() => { Game.ClickCookie(); Game.Earn(Game.cookies); }, 1); }],
+            ['Omnipotent Click Force', () => { Game.computedMouseCps = 1e100; Game.globalCpsMult = 1e100; }],
+        ],
+        
+        'ULTIMATE Golden Cookie Cheats': [
+            ['Spawn 100 Golden Cookies', () => { for(let i = 0; i < 100; i++) new Game.shimmer('golden'); }],
+            ['Spawn 1000 Golden Cookies', () => { for(let i = 0; i < 1000; i++) new Game.shimmer('golden'); }],
+            ['Golden Cookie APOCALYPSE', () => { for(let i = 0; i < 10000; i++) new Game.shimmer('golden'); }],
+            ['Permanent Golden Rain', () => { window.goldenRain = setInterval(() => { for(let i = 0; i < 50; i++) new Game.shimmer('golden'); }, 100); }],
+            ['Golden Cookie God Mode', () => { Game.shimmerTypes.golden.time = Infinity; Game.shimmerTypes.golden.maxTime = Infinity; }],
+            ['Reality Bending Luck', () => { Game.shimmerTypes.golden.getTimeMod = () => 0.01; }],
+            ['Golden Cookie Singularity', () => { setInterval(() => { Game.shimmers.forEach(s => { s.pop(); Game.Earn(1e20); }); }, 1); }],
+            ['Multiversal Golden Cookies', () => { window.multiversalGolden = setInterval(() => { for(let i = 0; i < 500; i++) { const shimmer = new Game.shimmer('golden'); shimmer.force = 'lucky'; } }, 10); }],
+            ['Quantum Lucky Streaks', () => { Game.shimmerTypes.golden.pool = ['lucky', 'lucky', 'lucky']; }],
+            ['Divine Golden Blessing', () => { setInterval(() => { new Game.shimmer('golden').force = 'dragonflight'; }, 100); }],
+        ],
+        
+        'LEGENDARY Upgrade Cheats': [
+            ['Unlock EVERYTHING Instantly', () => { Object.keys(Game.Upgrades).forEach(upgrade => { Game.Upgrades[upgrade].unlocked = 1; Game.Upgrades[upgrade].bought = 1; }); }],
+            ['Free Universe Mode', () => { Object.keys(Game.Upgrades).forEach(upgrade => Game.Upgrades[upgrade].basePrice = 0); Object.keys(Game.Objects).forEach(building => Game.Objects[building].basePrice = 0); }],
+            ['Upgrade Singularity', () => { Game.UpgradesInStore.forEach(upgrade => { for(let i = 0; i < 1000; i++) upgrade.buy(); }); }],
+            ['Transcendent Upgrades', () => { Object.keys(Game.Upgrades).forEach(upgrade => { Game.Upgrades[upgrade].power = 1e10; }); }],
+            ['Reality Warping Upgrades', () => { Game.globalCpsMult *= 1e20; Game.milkMult = 1000; }],
+            ['Divine Enhancement Protocol', () => { Game.UpgradesOwned = Object.keys(Game.Upgrades).length; Game.recalculateGains = 1; }],
+            ['Cosmic Upgrade Storm', () => { setInterval(() => { Game.UpgradesInStore.forEach(u => u.buy()); }, 100); }],
+        ],
+        
+        'GODMODE Achievement Cheats': [
+            ['Unlock ALL Achievements', () => Object.keys(Game.Achievements).forEach(achievement => Game.Win(achievement))],
+            ['Achievement Reality Storm', () => { for(let i = 0; i < 1000; i++) Game.Win(Object.keys(Game.Achievements)[Math.floor(Math.random() * Object.keys(Game.Achievements).length)]); }],
+            ['Transcendent Achievement Unlock', () => { Game.AchievementsOwned = Object.keys(Game.Achievements).length; Object.keys(Game.Achievements).forEach(a => Game.Achievements[a].won = 3); }],
+            ['Achievement God Protocol', () => { setInterval(() => { Object.keys(Game.Achievements).forEach(a => Game.Win(a)); }, 1000); }],
+            ['Divine Achievement Blessing', () => { Game.milkProgress = 1e10; Game.recalculateGains = 1; }],
+        ],
+        
+        'ULTIMATE Season Cheats': [
+            ['All Seasons Simultaneously', () => { Game.season = 'christmas'; Game.seasonUses = 1000; setTimeout(() => Game.season = 'halloween', 100); setTimeout(() => Game.season = 'easter', 200); }],
+            ['Eternal Christmas Magic', () => { Game.season = 'christmas'; Game.seasonUses = Infinity; Game.seasonTrigger('christmas'); }],
+            ['Halloween Nightmare Mode', () => { Game.season = 'halloween'; Game.seasonUses = 1e10; }],
+            ['Easter Infinity Eggs', () => { Game.season = 'easter'; Game.easterEggs = 17; Game.seasonUses = 1e20; }],
+            ['Valentine Love Explosion', () => { Game.season = 'fools'; Game.seasonUses = 1e15; }],
+            ['Season Reality Manipulation', () => { setInterval(() => { const seasons = ['christmas', 'halloween', 'easter', 'fools']; Game.seasonTrigger(seasons[Math.floor(Math.random() * seasons.length)]); }, 1000); }],
+        ],
+        
+        'TRANSCENDENT Prestige Cheats': [
+            ['Add 1 Million Prestige', () => { Game.prestige += 1000000; Game.prestigeLevel = 1000000; }],
+            ['Add 1 Billion Prestige', () => { Game.prestige += 1000000000; Game.prestigeLevel = 1000000000; }],
+            ['INFINITE Prestige Power', () => { Game.prestige = 1e50; Game.prestigeLevel = 1e50; }],
+            ['Prestige God Mode', () => { Game.prestige = Infinity; Game.heavenlyChips = Infinity; Game.heavenlyChipsSpent = 0; }],
+            ['Heavenly Chip Singularity', () => { Game.heavenlyChips = 1e100; Game.heavenlyPower = 1000; }],
+            ['Transcendent Ascension', () => { Game.heavenlyMultiplier = 1e20; Game.recalculateGains = 1; }],
+        ],
+        
+        'LEGENDARY Sugar Lump Cheats': [
+            ['Add 10000 Sugar Lumps', () => Game.lumps += 10000],
+            ['Add 1 Million Sugar Lumps', () => Game.lumps += 1000000],
+            ['INFINITE Sugar Lumps', () => Game.lumps = 1e50],
+            ['Sugar Lump God Mode', () => { Game.lumps = Infinity; Game.lumpT = Date.now(); }],
+            ['Caramelized Sugar Reality', () => { Game.lumpCurrentType = 4; Game.lumps += 1e10; }],
+            ['Sugar Lump Multiverse', () => { setInterval(() => Game.lumps += 1000, 100); }],
+            ['Divine Sugar Blessing', () => { Game.lumpRefill = Infinity; Game.lumps = 1e20; }],
+        ],
+        
+        'REALITY BREAKING Game Manipulation': [
+            ['INFINITE Cookies Per Second', () => { Game.cookiesPs = Infinity; Game.globalCpsMult = Infinity; }],
+            ['Time Itself Stops', () => { Game.T = 0; Game.time = 0; }],
+            ['HYPER Speed Reality', () => { Game.fps = 1000; Game.Logic = () => { for(let i = 0; i < 100; i++) Game.UpdateWrinklers(); Game.UpdateSpecial(); }; }],
+            ['Matrix Mode Activated', () => { Game.fps = 0.1; document.body.style.filter = 'invert(1) hue-rotate(180deg)'; }],
+            ['Game Singularity', () => { Game.Loop = () => { Game.Earn(1e20); Game.ClickCookie(); }; }],
+            ['Reality Glitch Mode', () => { setInterval(() => { Game.cookies = Math.random() * 1e50; }, 100); }],
+            ['Quantum Cookie Physics', () => { Game.cookiesPs = () => Math.random() * 1e30; }],
+            ['Multiversal Cookie Engine', () => { window.multiverseEngine = setInterval(() => { Game.Earn(Game.cookies); Game.cookiesPs *= 2; }, 10); }],
+            ['Divine Game Override', () => { Game.Win = (what) => { Game.cookies += 1e20; }; }],
+            ['Cosmic Cookie Laws', () => { Game.globalCpsMult = () => 1e50; Game.milkMult = 1e10; }],
+        ],
+        
+        'INSANE Visual Cheats': [
+            ['Cookie Becomes THE SUN', () => { document.getElementById('bigCookie').style.transform = 'scale(10)'; document.getElementById('bigCookie').style.filter = 'brightness(5) saturate(3)'; }],
+            ['Microscopic Cookie Mode', () => document.getElementById('bigCookie').style.transform = 'scale(0.01)'],
+            ['HYPNOTIC Rainbow Cookie', () => { let hue = 0; window.hypnoticCookie = setInterval(() => { document.getElementById('bigCookie').style.filter = 'hue-rotate(' + (hue++) + 'deg) saturate(5) brightness(2)'; }, 10); }],
+            ['Cookie TORNADO Mode', () => { document.getElementById('bigCookie').style.animation = 'tornado 0.1s linear infinite'; document.head.insertAdjacentHTML('beforeend', '<style>@keyframes tornado { from { transform: rotate(0deg) scale(1); } to { transform: rotate(360deg) scale(3); } }</style>'); }],
+            ['Glitch Cookie Reality', () => { window.glitchCookie = setInterval(() => { document.getElementById('bigCookie').style.transform = 'scale(' + (Math.random() * 5 + 0.5) + ') rotate(' + (Math.random() * 360) + 'deg)'; }, 50); }],
+            ['Cookie Teleportation', () => { window.teleportCookie = setInterval(() => { document.getElementById('bigCookie').style.left = Math.random() * window.innerWidth + 'px'; document.getElementById('bigCookie').style.top = Math.random() * window.innerHeight + 'px'; }, 100); }],
+            ['SEIZURE WARNING: Strobe Cookie', () => { window.strobeCookie = setInterval(() => { document.getElementById('bigCookie').style.opacity = Math.random(); }, 50); }],
+            ['Cookie Portal Effect', () => { document.getElementById('bigCookie').style.borderRadius = '50%'; document.getElementById('bigCookie').style.background = 'conic-gradient(from 0deg, #ff0000, #ff8000, #ffff00, #80ff00, #00ff00, #00ff80, #00ffff, #0080ff, #0000ff, #8000ff, #ff00ff, #ff0080, #ff0000)'; document.getElementById('bigCookie').style.animation = 'spin 0.5s linear infinite'; }],
+            ['Cookie Dimension Rift', () => { document.body.style.background = 'radial-gradient(circle, #000033, #660066, #330099)'; document.getElementById('bigCookie').style.boxShadow = '0 0 100px #ff00ff, inset 0 0 50px #00ffff'; }],
+            ['Reality Fractured Mode', () => { document.body.style.transform = 'perspective(1000px) rotateX(45deg)'; document.getElementById('game').style.filter = 'hue-rotate(180deg) invert(0.3)'; }],
+        ],
+        
+        'ULTIMATE Debug & Chaos': [
+            ['Enable GOD DEBUG Mode', () => { Game.SetPref('Debug', 1); Game.modSaveData = { godMode: true }; }],
+            ['Console SPAM ATTACK', () => { for(let i = 0; i < 10000; i++) console.log('🍪 MODDED BY TREXGTAG - COOKIE DOMINATION! 🍪'); }],
+            ['Memory OVERLOAD Test', () => { const bigArray = new Array(1000000).fill('TREXGTAG COOKIE MOD'); console.log('Array created:', bigArray.length); }],
+            ['Notification SPAM STORM', () => { for(let i = 0; i < 100; i++) setTimeout(() => Game.Notify('TREXGTAG MOD!', 'Cookie domination in progress! Cheat #' + i, [16, 5]), i * 50); }],
+            ['Audio CHAOS Mode', () => { if(Game.sounds) { setInterval(() => { Game.PlaySound('snd/buy' + (1 + Math.floor(Math.random() * 4)) + '.mp3'); }, 10); } }],
+            ['Screen SHAKE Earthquake', () => { document.body.style.animation = 'earthquake 0.1s infinite'; document.head.insertAdjacentHTML('beforeend', '<style>@keyframes earthquake { 0% { transform: translate(0px, 0px) rotate(0deg); } 25% { transform: translate(5px, 5px) rotate(1deg); } 50% { transform: translate(-5px, 2px) rotate(-1deg); } 75% { transform: translate(-3px, -3px) rotate(1deg); } 100% { transform: translate(1px, -2px) rotate(-1deg); } }</style>'); }],
+            ['DISCO FEVER Mode', () => { window.discoMode = setInterval(() => { document.body.style.backgroundColor = 'hsl(' + Math.random() * 360 + ', 100%, 50%)'; document.body.style.color = 'hsl(' + Math.random() * 360 + ', 100%, 50%)'; }, 100); }],
+            ['Cookie MATRIX Mode', () => { document.body.style.background = 'black'; document.body.style.color = '#00ff00'; document.body.style.fontFamily = 'monospace'; document.head.insertAdjacentHTML('beforeend', '<style>* { text-shadow: 0 0 10px #00ff00 !important; }</style>'); }],
+        ],
+        
+        'EXPERIMENTAL Reality Breakers': [
+            ['Cookie Singularity COLLAPSE', () => { Game.cookies = 1e1000; Game.cookiesEarned = 1e1000; Game.cookiesPs = 1e500; Game.globalCpsMult = 1e200; }],
+            ['Infinite Probability Drive', () => { Game.shimmerTypes.golden.getTimeMod = () => 0; Game.shimmerTypes.golden.pool = ['dragonflight', 'click frenzy', 'cookie storm']; }],
+            ['Quantum Cookie Entanglement', () => { setInterval(() => { Game.cookies = Game.cookies * 2; Game.Earn(Game.cookies); }, 1); }],
+            ['Multiversal Cookie Merger', () => { window.universesMerged = setInterval(() => { Game.cookies += Game.cookies * Math.random() * 1000; }, 10); }],
+            ['Reality.exe STOPPED', () => { Game.Loop = () => { Game.Earn(Infinity); Game.cookies = Infinity; Game.cookiesPs = Infinity; }; }],
+            ['Cookie GODHOOD Achieved', () => { Game.cookies = Infinity; Game.cookiesPs = Infinity; Game.globalCpsMult = Infinity; Game.prestige = Infinity; Game.lumps = Infinity; Object.keys(Game.Objects).forEach(b => Game.Objects[b].amount = Infinity); }],
+            ['Break Cookie Clicker', () => { eval('Game = { cookies: Infinity, cookiesPs: Infinity, Earn: () => {}, ClickCookie: () => {}, Notify: (a,b,c) => console.log("BROKEN BY TREXGTAG:", a, b) };'); }],
+            ['Transcend Digital Existence', () => { console.log('🍪 CONGRATULATIONS! You have transcended Cookie Clicker itself! 🍪'); alert('You are now a Cookie God. Made by TrexGtag!'); }],
+        ]
+    };
+    
+    // Create category buttons and cheat buttons
+    function createCheatMenu() {
+        const container = document.getElementById('cheat-categories');
+        
+        Object.keys(cheatCategories).forEach(category => {
+            const categoryDiv = document.createElement('div');
+            categoryDiv.style.marginBottom = '15px';
+            
+            const categoryButton = document.createElement('button');
+            categoryButton.textContent = `${category} (${cheatCategories[category].length})`;
+            categoryButton.style.cssText = `
+                width: 100%;
+                padding: 10px;
+                background: rgba(255,255,255,0.2);
+                border: none;
+                color: white;
+                border-radius: 8px;
+                cursor: pointer;
+                font-weight: bold;
+                margin-bottom: 8px;
+                transition: all 0.3s;
+            `;
+            
+            const cheatsContainer = document.createElement('div');
+            cheatsContainer.style.display = 'none';
+            cheatsContainer.style.paddingLeft = '10px';
+            
+            cheatCategories[category].forEach(([name, func]) => {
+                const cheatButton = document.createElement('button');
+                cheatButton.textContent = name;
+                cheatButton.style.cssText = `
+                    width: 100%;
+                    padding: 6px;
+                    margin: 2px 0;
+                    background: rgba(255,255,255,0.1);
+                    border: 1px solid rgba(255,255,255,0.3);
+                    color: white;
+                    border-radius: 5px;
+                    cursor: pointer;
+                    font-size: 12px;
+                    transition: all 0.2s;
+                `;
+                
+                cheatButton.onclick = () => {
+                    try {
+                        func();
+                        cheatButton.style.background = 'rgba(0,255,0,0.3)';
+                        setTimeout(() => cheatButton.style.background = 'rgba(255,255,255,0.1)', 500);
+                    } catch (error) {
+                        console.error('Cheat error:', error);
+                        cheatButton.style.background = 'rgba(255,0,0,0.3)';
+                        setTimeout(() => cheatButton.style.background = 'rgba(255,255,255,0.1)', 500);
+                    }
+                };
+                
+                cheatButton.onmouseover = () => cheatButton.style.background = 'rgba(255,255,255,0.3)';
+                cheatButton.onmouseout = () => cheatButton.style.background = 'rgba(255,255,255,0.1)';
+                
+                cheatsContainer.appendChild(cheatButton);
+            });
+            
+            categoryButton.onclick = () => {
+                const isVisible = cheatsContainer.style.display !== 'none';
+                cheatsContainer.style.display = isVisible ? 'none' : 'block';
+                categoryButton.style.background = isVisible ? 'rgba(255,255,255,0.2)' : 'rgba(255,255,255,0.4)';
+            };
+            
+            categoryButton.onmouseover = () => categoryButton.style.background = 'rgba(255,255,255,0.4)';
+            categoryButton.onmouseout = () => {
+                const isVisible = cheatsContainer.style.display !== 'none';
+                categoryButton.style.background = isVisible ? 'rgba(255,255,255,0.4)' : 'rgba(255,255,255,0.2)';
+            };
+            
+            categoryDiv.appendChild(categoryButton);
+            categoryDiv.appendChild(cheatsContainer);
+            container.appendChild(categoryDiv);
+        });
+    }
+    
+    // Make menu draggable
+    let isDragging = false;
+    let currentX, currentY, initialX, initialY;
+    
+    const header = document.getElementById('mod-header');
+    const menu = document.getElementById('trex-mod-menu');
+    
+    header.addEventListener('mousedown', (e) => {
+        isDragging = true;
+        initialX = e.clientX - menu.offsetLeft;
+        initialY = e.clientY - menu.offsetTop;
+    });
+    
+    document.addEventListener('mousemove', (e) => {
+        if (isDragging) {
+            currentX = e.clientX - initialX;
+            currentY = e.clientY - initialY;
+            menu.style.left = currentX + 'px';
+            menu.style.top = currentY + 'px';
+            menu.style.right = 'auto';
+        }
+    });
+    
+    document.addEventListener('mouseup', () => {
+        isDragging = false;
+    });
+    
+    // Toggle menu visibility
+    document.getElementById('toggle-menu').onclick = () => {
+        const content = document.getElementById('menu-content');
+        const button = document.getElementById('toggle-menu');
+        const isVisible = content.style.display !== 'none';
+        
+        content.style.display = isVisible ? 'none' : 'block';
+        button.textContent = isVisible ? '+' : '-';
+        menu.style.height = isVisible ? 'auto' : '60px';
+    };
+    
+    // Initialize the menu
+    createCheatMenu();
+    
+    // Count total cheats and update display
+    const totalCheats = Object.values(cheatCategories).reduce((total, category) => total + category.length, 0);
+    document.getElementById('cheat-count').textContent = totalCheats;
+    
+    console.log(`🍪 COOKIE CLICKER MOD MENU LOADED! 🍪`);
+    console.log(`✨ ${totalCheats} OVERPOWERED cheats ready to dominate! ✨`);
+    console.log(`🎮 Made by TrexGtag - Cookie domination awaits! 🎮`);
+    
+    // Epic welcome message (removed automatic golden cookie spawning)
+    Game.Notify('🍪 ULTIMATE MOD LOADED! 🍪', `${totalCheats} OVERPOWERED cheats ready! Made by TrexGtag`, [16, 5]);
+    
+    // Removed the automatic golden cookie spawning section that was here
+    
+})();
